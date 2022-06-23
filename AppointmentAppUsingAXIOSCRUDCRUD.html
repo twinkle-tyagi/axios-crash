@@ -109,12 +109,13 @@ function store(event)
 
         window.addEventListener('DOMContentLoaded', () =>
         {
-            Object.keys(localStorage).forEach((key) =>
-            {
-                detail = localStorage.getItem(key);
-                stringDetail = JSON.parse(detail);
-                showUsers(stringDetail);
-            });
+            axios.get("https://crudcrud.com/api/a10ec9fa9d504c57a6faedd7c55e09c9/AppointmentData")
+            .then((res) => {
+                for(var i =0; i< res.data.length; i++) {
+                    showUsers(res.data[i]);
+                }
+            })
+            .catch(err => console.log(err));
         });
         
 </script>
