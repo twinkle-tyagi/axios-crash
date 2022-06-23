@@ -69,8 +69,22 @@ function store(event)
 
         function deleteUser(email)
         {
-            console.log("deleted is " + email);
-            localStorage.removeItem(email); // removes from storage
+            axios.get('https://crudcrud.com/api/a10ec9fa9d504c57a6faedd7c55e09c9/AppointmentData')
+            .then((res) => {
+                var id1;
+                for(var i =0; i<res.data.length; i++)
+                {
+                    if(res.data[i].email === email)
+                    {
+                        id1 = res.data[i]._id;
+                        break;
+                    }
+                }
+                var url = "https://crudcrud.com/api/a10ec9fa9d504c57a6faedd7c55e09c9/AppointmentData/" + id1;
+                axios.delete(url)
+            })
+            .catch();
+
             removeFromScreen(email); // removes from li
         }
 
