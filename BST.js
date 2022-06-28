@@ -71,4 +71,17 @@ class BST
             this.search(root.right, data);
         }
     }
+
+    preOrder(root)
+    {
+        if(this.root == null)
+        {
+            return null;
+        }
+
+        console.log(root.data);
+
+        this.preOrder(root.left);
+        this.preOrder(root.right);
+    }
 }
