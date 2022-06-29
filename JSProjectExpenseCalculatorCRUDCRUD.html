@@ -1,0 +1,107 @@
+<html>
+    <body>
+        <form onsubmit="addUser(event)" id="userform">
+            <label for="Expenses"> Expenses </label>
+            <input type="text" id="Expenses">
+            <label for="Description"> Description </label>
+            <input type="text" id = "Description">
+            <label for="Category"> Category </label>
+            <select name="Category" id="Category">
+                <option value="Food"> Food </option>
+                <option value="Gift"> Gift </option>
+                <option value="Rent"> Rent </option>
+                <option value="Shopping"> Shopping </option>
+                <option value="Vacations"> Vacations </option> 
+            </select>
+            <input class="btn" type="submit" id="button" value="submit">
+        </form>
+
+        <ul id="userlist">
+
+        </ul>
+    </body>
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"> </script>
+
+<script>
+    function addUser(event)
+    {
+        event.preventDefault();
+
+        let expenses = event.target.Expenses.value;
+        let description = event.target.Description.value;
+        let category = event.target.Category.value;
+
+        let obj = {
+            expenses,
+            description,
+            category
+        }
+
+        axios.post("https://crudcrud.com/api/3017188a7dad49ca91fec74dbb1cdfe9/expenseCalculator",obj)
+        .then(res => showUser(obj))
+        .catch(err => console.log(err));
+    }
+
+    function showUser(obj)
+    {
+        document.getElementById('Expenses').value = '';
+        document.getElementById('Category').value = '';
+        document.getElementById('Description').value = '';
+
+        const parent = document.getElementById("userlist");
+
+        const child = `<li id='${obj._id}'> Expenses are = ${obj.expenses}, description is = ${obj.description} and category is = ${obj.category} 
+        <button onclick = deleteUser('${obj._id}')> Delete </button> 
+        <button onclick = editUser('${obj._id}')> Edit User </button> </li>` 
+
+        parent.innerHTML = parent.innerHTML + child;
+    }
+
+    function deleteUser(userId)
+    {
+        axios.delete(`https://crudcrud.com/api/3017188a7dad49ca91fec74dbb1cdfe9/expenseCalculator/${userId}`)
+        .then(() => {
+            removeUser(userId);
+        })
+        .catch(err => console.log(err));
+    }
+
+    function removeUser(userId)
+    {
+        const parent = document.getElementById("userlist");
+        const child = document.getElementById(userId);
+
+        if(child)
+        {
+            parent.removeChild(child);
+        }
+    }
+
+    function editUser(userId)
+    {
+        axios.get(`https://crudcrud.com/api/3017188a7dad49ca91fec74dbb1cdfe9/expenseCalculator/${userId}`)
+        .then((res) => {
+            document.getElementById('Expenses').value = res.data.expenses;
+            document.getElementById('Description').value = res.data.description;
+            document.getElementById('Category').value = res.data.category;
+
+            deleteUser(userId);
+        })
+        .catch(err => console.log(err));
+
+    }
+    
+    window.addEventListener('DOMContentLoaded', () => {
+        axios.get("https://crudcrud.com/api/3017188a7dad49ca91fec74dbb1cdfe9/expenseCalculator")
+        .then((res) => {
+            for(var i =0; i< res.data.length; i++)
+            {
+                showUser(res.data[i]);
+            }
+        })
+        .catch(err => console.log(err));
+    });
+
+</script>
