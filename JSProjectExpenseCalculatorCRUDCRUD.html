@@ -27,7 +27,7 @@
 <script>
 
     // to add a new expense
-    function addExpense(event)
+    async function addExpense(event)
     {
         event.preventDefault();
 
@@ -41,9 +41,14 @@
             category
         }
 
-        axios.post("https://crudcrud.com/api/3017188a7dad49ca91fec74dbb1cdfe9/expenseCalculator",obj)
-        .then(res => showExpense(obj))
-        .catch(err => console.log(err));
+            try {
+                await axios.post("https://crudcrud.com/api/d7c2f25b4eaa4064818f5f435e752e88/expenseCalculator",obj)
+                showExpense(obj);
+            }
+            catch(err)
+            {
+                console.log(err);
+            }
     }
 
     // to add child list and show it on html page
@@ -63,13 +68,15 @@
     }
 
     // to delete expense from CRUDCRUD
-    function deleteExpense(userId)
+    async function deleteExpense(userId)
     {
-        axios.delete(`https://crudcrud.com/api/3017188a7dad49ca91fec74dbb1cdfe9/expenseCalculator/${userId}`)
-        .then(() => {
-            removeExpense(userId);
-        })
-        .catch(err => console.log(err));
+            try{
+                await axios.delete(`https://crudcrud.com/api/d7c2f25b4eaa4064818f5f435e752e88/expenseCalculator/${userId}`)
+                removeExpense(userId);
+            }
+            catch (err) {
+                console.log(err);
+            }
     }
 
     // to remove expense from html
@@ -85,30 +92,38 @@
     }
 
     //to edit expense
-    function editExpense(userId)
+    async function editExpense(userId)
     {
-        axios.get(`https://crudcrud.com/api/3017188a7dad49ca91fec74dbb1cdfe9/expenseCalculator/${userId}`)
-        .then((res) => {
-            document.getElementById('Expenses').value = res.data.expenses;
-            document.getElementById('Description').value = res.data.description;
-            document.getElementById('Category').value = res.data.category;
+            try{
+                const res = await axios.get(`https://crudcrud.com/api/d7c2f25b4eaa4064818f5f435e752e88/expenseCalculator/${userId}`)
+            
+                document.getElementById('Expenses').value = res.data.expenses;
+                document.getElementById('Description').value = res.data.description;
+                document.getElementById('Category').value = res.data.category;
 
-            deleteExpense(userId);
-        })
-        .catch(err => console.log(err));
-
+                deleteExpense(userId);
+            }
+            catch(err)
+            {
+                console.log(err);
+            }
     }
     
     //to load content when refresh page
-    window.addEventListener('DOMContentLoaded', () => {
-        axios.get("https://crudcrud.com/api/3017188a7dad49ca91fec74dbb1cdfe9/expenseCalculator")
-        .then((res) => {
-            for(var i =0; i< res.data.length; i++)
-            {
-                showExpense(res.data[i]);
-            }
-        })
-        .catch(err => console.log(err));
+    window.addEventListener('DOMContentLoaded', async () => {
+
+            try{
+                const res = await axios.get("https://crudcrud.com/api/d7c2f25b4eaa4064818f5f435e752e88/expenseCalculator")
+                
+                for(var i =0; i< res.data.length; i++)
+                {
+                    showExpense(res.data[i]);
+                }
+        }
+        catch(err)
+        {
+            console.log(err);
+        }
     });
 
 </script>

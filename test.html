@@ -1,0 +1,20 @@
+<html>
+
+    <script>
+    const promise = new Promise((resolve, reject) => 
+{
+setTimeout(() => {
+console.log('buy car')},2000);
+});
+
+function p2()
+{
+    console.log("plan to Goa");
+}
+
+promise.then(() => console.log("plan to goa")
+)
+.catch(() => console.log('book a cab'));
+
+    </script>
+</html>
